@@ -69,6 +69,11 @@ http.createServer((req, res) => {
         handle(c, b); res.writeHead(204); res.end();
       } catch { res.writeHead(400); res.end(); }
     });
+  } else if (req.url === '/ice') {
+    let ice = null;
+    try { ice = JSON.parse(process.env.ICE_SERVERS); } catch {}
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(ice || [{ urls: 'stun:stun.l.google.com:19302' }]));
   } else {
     fs.readFile(path.join(__dirname, 'index.html'), (e, d) => {
       if (e) { res.writeHead(500); return res.end('index.html missing'); }
